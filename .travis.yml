@@ -32,7 +32,9 @@ install:
   - python setup.py install -noheaders
 
 env:
-  - SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=disk
+  global:
+    - SDL_VIDEODRIVER=dummy
+    - SDL_AUDIODRIVER=disk
 
 # command to run tests
 script: 
