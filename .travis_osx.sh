@@ -1,10 +1,10 @@
 #!/bin/bash
-git clone https://github.com/matthew-brett/multibuild.git
+git clone https://github.com/MacPython/terryfy.git
 cd multibuild
 # Work with a specific commit
-git checkout 602eaed26bca411566540005ff2cc872b525a0c1
+git checkout c9800884ae1171bfc72b2737974f5e8dec28479d
 cd ..
 
-source multibuild/osx_utils.sh
+source terryfy/travis_tools.sh
 
-get_macpython_environment $PY_VERSION $(pwd)/_test_env
+get_python_environment homebrew $PY_VERSION $(pwd)/_test_env
