@@ -6,30 +6,31 @@ matrix:
         - os: linux
           sudo: required
           python: 2.7
-          env: TOXENV=py27
         - os: linux
           sudo: required
           python: 3.4
-          env: TOXENV=py34
         - os: linux
           sudo: required
           python: 3.5
-          env: TOXENV=py35
         - os: osx
           language: generic
-          env: TOXENV=py27
+          env: PY_VERSION=3.5.1
         - os: osx
           language: generic
-          env: TOXENV=py34
+          env: PY_VERSION=3.4.4
         - os: osx
           language: generic
-          env: TOXENV=py35
+          env: PY_VERSION=2.7.11
 # command to install
 install:
 #  - pip install . --use-mirrors
 #  - pip install -r requirements.txt --use-mirrors
-  - python config.py -auto
-  - python setup.py install -noheaders
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then PYTHON_EXE=python PIP_CMD=pip; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source .travis_osx.sh; fi
+  - $PIP_CMD install --upgrade setuptools pip
+  - $PIP_CMD install --upgrade numpy
+  - $PYTHON_EXE config.py -auto
+  - $PYTHON_EXE setup.py install -noheaders
 
 env:
   global:
@@ -38,13 +39,13 @@ env:
 
 # command to run tests
 script: 
-  - python -m pygame.tests.__main__ --exclude opengl
+  - $PYTHON_EXE -m pygame.tests.__main__ --exclude opengl
 
 
 # Here we install the ubuntu dependencies with apt-get.
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl sdl_image sdl_mixer sdl_ttf smpeg jpeg libpng portmidi freetype homebrew/python/numpy; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl sdl_image sdl_mixer sdl_ttf smpeg jpeg libpng portmidi freetype; fi
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update; fi
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install python-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev libsdl1.2-dev python-numpy libportmidi-dev libjpeg-dev libtiff4-dev libx11-6 libX11-dev xfonts-base xfonts-100dpi xfonts-75dpi xfonts-cyrillic; fi  
 
